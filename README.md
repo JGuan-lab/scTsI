@@ -10,7 +10,7 @@ scTsI is a two-stage algorithm for single cell gene expression imputation.  In t
 
 ## 3.Quick start
 ### 3.1 Prepare data
-    The inputs include scRNA-seq data and bulk RNA-seq data.
+The inputs include scRNA-seq data and bulk RNA-seq data.
     path = ''
     setwd(path)
     data_sc<as.matrix(readRDS(paste0(path,'data_sc.rds'))
