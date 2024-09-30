@@ -533,29 +533,6 @@ truedata_tsne_plot <- function(data,realcluster,name){
   return(p)
 }
 
-a <- ggplot(data = mydata,aes(x=Method,y=value,group =Dropout,color=Dropout))+
-  geom_point()+
-  geom_line()+
-  xlab('800×1000')+
-  ylab("cel-cell")+
-  theme_bw() +
-  theme(
-    panel.grid.major=element_line(colour=NA),
-    panel.background = element_rect(fill = "transparent",colour = NA),
-    plot.background = element_rect(fill = "transparent",colour = NA),
-    panel.grid.minor = element_blank(),
-    axis.title =  element_text(size=16,face = "bold"),
-    axis.text = element_text(size=10), 
-    legend.text = element_text(size = 14), 
-    legend.title = element_text(size = 16, face = "bold"), 
-    #text = element_text(family = "STXihei"),
-    #legend.position = c(.075,.075),
-    #legend.box.background = element_rect(color="black")
-  )+
-  scale_color_manual(values = c("#84C7E1","#1A95C8","#0064B2","#254F82","#053061","#440154FF"))+
-  # scale_y_continous(limits=c(min(y),max(y)),breaks=round(seq(min(y),max(y),length.out=3),2))
-  scale_y_continuous(labels=scaleFUN)
-
 plot__boxplot <- function(mydata){
   bp<-ggplot(data=mydata, aes(x=Method,y=value)) +     
       geom_boxplot(aes(fill = Method),outlier.shape = NA)+
