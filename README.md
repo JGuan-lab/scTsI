@@ -2,6 +2,8 @@
 ## 1.Introduction
 scTsI is a two-stage algorithm for single cell gene expression imputation.  In the first stage, scTsI finds neighboring cells and genes for initial imputation through KNN, and in the second stage, scTsI leverages bulk RNA-seq data as a constraint and uses ridge regression for adjusting the initial imputed values.
 
+The simulated datasets and the analyzed experimental single-cell datasets can be accessed at: https//zenodo.org/uploads/13859610
+
 ## 2.Requirements:
     library(glmnet)
     source('scTsI.R')
