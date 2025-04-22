@@ -7,8 +7,8 @@ library(Matrix)
 library(Metrics)
 library(glmnet)
 
-scTsI_impute <- function(data_sc,data_bulk){
-
+scTsI_impute <- function(data_sc,threshold=0,data_bulk,k1=25,k2=25){
+  data_sc[data_sc < threshold] <- 0
   dimensions <- dim(data_sc)
   m = dimensions[1]
   n = dimensions[2]
@@ -22,7 +22,7 @@ scTsI_impute <- function(data_sc,data_bulk){
   data_before <- t(data_sc)
   data_before_tt <- data_sc
   # cell
-  idx <-get.knn(data_before,  k = 25) 
+  idx <-get.knn(data_before,  k = k1) 
   
   for (i in 1:n) {
     data <- colMeans(data_before[idx$nn.index[i,],])
@@ -31,7 +31,7 @@ scTsI_impute <- function(data_sc,data_bulk){
   }
   
   # gene
-  idx <-get.knn(data_before_tt,  k = 25) 
+  idx <-get.knn(data_before_tt,  k = k2) 
   
   for (i in 1:m) {
     data <- colMeans(data_before_tt[idx$nn.index[i,],])
@@ -76,4 +76,21 @@ scTsI_impute <- function(data_sc,data_bulk){
   data_result <- result+data_knn
   data_result[data_result < 0] <- 0
   return(data_result)
+}
+
+
+find_threshold <-function(data_sc){
+
+vec <- as.vector(data)
+unique_sorted <- sort(unique(vec))
+
+q_vals <- quantile(unique_sorted, probs = c(0.001,0.002,0.005,0.01,0.02,0.05, 0.10, 0.15, 0.20))
+
+vec_sorted <- sort(vec)
+n <- length(vec_sorted)
+
+data.frame(
+  quantile = names(q_vals),
+  value = round(as.numeric(q_vals), 4),
+)
 }
