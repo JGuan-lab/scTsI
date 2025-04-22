@@ -19,4 +19,4 @@ The inputs include scRNA-seq data and bulk RNA-seq data.
 scTsI selects the result of the first λ of glmnet by default. 
 The better results can be obtained by calculating other λ results, adjusting the number of λ, or changing the range of λ.
 
-    result <- scTsI(data_sc,data_bulk)
+    result <- scTsI(data_sc,theshold=0,data_bulk,k1=25,k2=25)
