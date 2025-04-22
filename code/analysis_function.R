@@ -38,9 +38,7 @@ cluster_evalu<-function(H,realcluster){
   }
   nmi <- NMI(reallist,cluslist)
   ari <- adjustedRandIndex(realcluster,cluster)
-  stats <- cluster.stats(dist(H)^2, cluster)
-  sc <- stats$avg.silwidth
-  clu_eva<-list(ari,sc,nmi)
+  clu_eva<-list(ari,nmi)
   return(clu_eva)
 }
 
@@ -49,7 +47,7 @@ evalu_mean <- function(impute,realcluster){
   H = t(impute)
   ari<-vector(length=100)
   nmi<-vector(length=100)
-  for(j in c(1:5)){
+  for(j in c(1:100)){
     test=cluster_evalu(H,realcluster)
     ari[j]<-test[[1]]
     nmi[j]<-test[[2]]
@@ -467,21 +465,20 @@ cell_cell_plot <- function(mydata){
 }
 time_plot <- function(mydata){
   mydata <- melt(mydata,id="Method")
-  colnames(mydata) <- c("Method","dimension","value")#更改列名
+  colnames(mydata) <- c("Method","dimension","value")
   time<-ggplot(data=mydata, aes(x=Method,y=log(value+1))) +     
-  geom_boxplot(aes(fill = Method),outlier.shape = NA)+# 移除异常值点
+  geom_boxplot(aes(fill = Method),outlier.shape = NA)+
   theme_bw()+
   geom_jitter(width = 0.2, alpha = 0.7)+
-  scale_fill_manual(values = colors) +  # 手动设置填充颜色
-  labs(x = "",  # 设置x轴标题
+  scale_fill_manual(values = colors) + 
+  labs(x = "",  
        y = "Time/log(s+1)")+  theme(
          panel.grid = element_blank(),
-         axis.title =  element_text(size=16,face = "bold"),#设置标题字体大小
+         axis.title =  element_text(size=16,face = "bold"),
          axis.text = element_text(size=10), 
-         legend.text = element_text(size = 14), # 设置图例标签字体大小
-         legend.title = element_text(size = 16, face = "bold"), # 设置图例标题字体大小
-         axis.text.x = element_text(angle = 25, hjust = 1),  # 控制 x 轴标签角度和对齐,
-         # axis.text.x = element_blank(),  # 隐藏 x 轴的标签)
+         legend.text = element_text(size = 14), 
+         legend.title = element_text(size = 16, face = "bold"), 
+         axis.text.x = element_text(angle = 25, hjust = 1),  
        )
   return(time)
 }
@@ -500,10 +497,10 @@ simulated_data_tsne_plot <- function(data,realcluster,name){
           panel.grid.major=element_line(colour=NA),
           panel.grid.minor = element_blank(),
           axis.title =  element_text(size=10,face = "bold"),
-          axis.text.x = element_blank(),  # 隐藏 x 轴的标签
-          axis.text.y = element_blank(),  # 隐藏 y 轴的标签
-          axis.ticks.x = element_blank(),  # 隐藏 x 轴的刻度
-          axis.ticks.y = element_blank()   # 隐藏 y 轴的刻度
+          axis.text.x = element_blank(), 
+          axis.text.y = element_blank(), 
+          axis.ticks.x = element_blank(),  
+          axis.ticks.y = element_blank()   
     ) +
     labs(title = name,color="Species")
   
