@@ -7,8 +7,10 @@ library(Matrix)
 library(Metrics)
 library(glmnet)
 
-scTsI_impute <- function(data_sc,threshold=0,data_bulk,k1=25,k2=25){
+scTsI <- function(data_sc,threshold=0,data_bulk,k1=25,k2=25){
+  
   data_sc[data_sc < threshold] <- 0
+ 
   dimensions <- dim(data_sc)
   m = dimensions[1]
   n = dimensions[2]
@@ -16,11 +18,13 @@ scTsI_impute <- function(data_sc,threshold=0,data_bulk,k1=25,k2=25){
   ones_m <- rep(1, times = m)
   diag_mn <- Matrix(diag(ones_m)/n, sparse = TRUE)
   
+  # Construct the B matrix(Refer to the formula introduced)
   B = kronecker(t(ones_n),diag_mn)
   
   # twice knn
   data_before <- t(data_sc)
   data_before_tt <- data_sc
+  
   # cell
   idx <-get.knn(data_before,  k = k1) 
   
@@ -38,12 +42,15 @@ scTsI_impute <- function(data_sc,threshold=0,data_bulk,k1=25,k2=25){
     zero_positions <- which(data_before_tt[i,] == 0)
     data_before_tt[i,zero_positions] = data[zero_positions]
   }
-  
+  # first stage
   data_knn <- (t(data_before)+data_before_tt)/2
   
-  
+  # Vectorize
   combined_vector <- c(data_sc)
+  
   n = length(combined_vector)
+  
+  # Construct the M matrix
   M <- sparseMatrix(i = 1:n, j = 1:n, x = 1)
   nonzero_indices <- which(combined_vector != 0)
   zero_indices <- which(combined_vector == 0)
@@ -61,7 +68,7 @@ scTsI_impute <- function(data_sc,threshold=0,data_bulk,k1=25,k2=25){
   combined_knn = as(combined_knn,'matrix')
   limit_vector = -combined_knn
   
-  # y2
+  # output y2
   fit = glmnet(x=x, y=y, alpha = 0,family = "gaussian",lower.limits = limit_vector,intercept = FALSE,nlambda = 10)
   
   # The first result is chosen by default
@@ -72,8 +79,13 @@ scTsI_impute <- function(data_sc,threshold=0,data_bulk,k1=25,k2=25){
   u = numeric((m*n-vector_length))
   Y = c(B,u)
   Y_result <- as(M_%*%Y, "matrix")
+
+  # second stage
   result <- matrix(Y_result, nrow = m, ncol = n)
+
+  
   data_result <- result+data_knn
+  # Output the final result
   data_result[data_result < 0] <- 0
   return(data_result)
 }
@@ -81,16 +93,14 @@ scTsI_impute <- function(data_sc,threshold=0,data_bulk,k1=25,k2=25){
 
 find_threshold <-function(data_sc){
 
-vec <- as.vector(data)
-unique_sorted <- sort(unique(vec))
+  vec <- as.vector(data)
+  unique_sorted <- sort(unique(vec))
+  q_vals <- quantile(unique_sorted, probs = c(0.001,0.002,0.005,0.01,0.02,0.05, 0.10, 0.15, 0.20))
+  vec_sorted <- sort(vec)
+  n <- length(vec_sorted)
 
-q_vals <- quantile(unique_sorted, probs = c(0.001,0.002,0.005,0.01,0.02,0.05, 0.10, 0.15, 0.20))
-
-vec_sorted <- sort(vec)
-n <- length(vec_sorted)
-
-data.frame(
-  quantile = names(q_vals),
-  value = round(as.numeric(q_vals), 4),
-)
+  data.frame(
+    quantile = names(q_vals),
+    value = round(as.numeric(q_vals), 4),
+  )
 }
