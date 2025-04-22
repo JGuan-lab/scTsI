@@ -17,11 +17,9 @@ The inputs include scRNA-seq data and bulk RNA-seq data.
     data_bulk <- as.matrix(readRDS(paste0(path,'data_bulk.rds'))
 ### 3.2 Run scTsI
 threshold represents the threshold for highly expressed genes.
-
 k1 and k2 represent the number of neighbor cells and neighbor genes in the first step, respectively.
 
 scTsI selects the result of the first λ of glmnet by default. 
-
 The better results can be obtained by calculating other λ results, adjusting the number of λ, or changing the range of λ.
 
     result <- scTsI(data_sc,threshold=0,data_bulk,k1=25,k2=25)
