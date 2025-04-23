@@ -22,4 +22,6 @@ The better results can be obtained by calculating other λ results, adjusting th
 
     # run demo.R
     # The annotations for the two-stage algorithm are in scTsI.R
+    
     result <- scTsI(data_sc,threshold=0,data_bulk,k1=25,k2=25)
+    write.csv(result, file="scTsI_result.csv")
