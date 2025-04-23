@@ -11,10 +11,8 @@ The simulated datasets and the analyzed experimental single-cell datasets can be
 ### 3.1 Prepare data
 The inputs include scRNA-seq data and bulk RNA-seq data. 
 
-    path = ''
-    setwd(path)
-    data_sc <- as.matrix(readRDS(paste0(path,'data_sc.rds'))
-    data_bulk <- as.matrix(readRDS(paste0(path,'data_bulk.rds'))
+    data_sc <- as.matrix(readRDS('data_sc.rds'))
+    data_bulk <- as.matrix(readRDS('data_bulk.rds'))
 ### 3.2 Run scTsI
 threshold represents the threshold for highly expressed genes.
 k1 and k2 represent the number of neighbor cells and neighbor genes in the first step, respectively.
