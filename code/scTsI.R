@@ -71,8 +71,9 @@ scTsI <- function(data_sc,threshold=0,data_bulk,k1=25,k2=25){
   # output y2
   fit = glmnet(x=x, y=y, alpha = 0,family = "gaussian",lower.limits = limit_vector,intercept = FALSE,nlambda = 10)
   
-  # The first result is chosen by default
-  B <- as.matrix(fit$beta[,1])
+  # The median result is chosen by default
+  # The beta result is in order
+  B <- as.matrix(fit$beta[,5])
   dimensions <- dim(data_knn)
   m = dimensions[1]
   n = dimensions[2]
